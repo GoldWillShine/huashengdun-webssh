@@ -2,10 +2,12 @@
 
 var jQuery;
 var wssh = {};
+
 (function() {
   // For FormData without getter and setter
   var proto = FormData.prototype,
       data = {};
+
   if (!proto.get) {
     proto.get = function (name) {
       if (data[name] === undefined) {
@@ -23,30 +25,36 @@ var wssh = {};
       return data[name];
     };
   }
+
   if (!proto.set) {
     proto.set = function (name, value) {
       data[name] = value;
     };
   }
-  document.querySelector('#sshlinkBtn').addEventListener("click", updateSSHlink);
-
-  // 添加复制功能
-  var sshlinkdiv = document.getElementById("sshlink");
-  if (sshlinkdiv) {
-    sshlinkdiv.style.cursor = "pointer";
-    sshlinkdiv.title = "Click to copy";
-    sshlinkdiv.addEventListener("click", function() {
-      var text = this.textContent;
-      if (text) {
-        navigator.clipboard.writeText(text).then(function() {
-          alert('SSH link copied to clipboard!');
-        }, function(err) {
-          console.error('Could not copy text: ', err);
-        });
-      }
-    });
-  }
 }());
+
+
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert('SSH link copied to clipboard!');
+    }).catch(function(err) {
+      console.error('Could not copy text: ', err);
+    });
+  } else {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      alert('SSH link copied to clipboard!');
+    } catch (err) {
+      console.error('Could not copy text: ', err);
+    }
+    document.body.removeChild(textArea);
+  }
+}
 
 function updateSSHlink() {
     var thisPageProtocol = window.location.protocol;
@@ -58,14 +66,33 @@ function updateSSHlink() {
     }
     var usrnamestr = document.getElementById("username").value;
     if (usrnamestr == "") {
-      usrnamestr = "root" // 修正：将 portstr 改为 usrnamestr
+      usrnamestr = "root"
     }
     var passwdstr = document.getElementById("password").value;
     var passwdstrAfterBase64 = window.btoa(passwdstr);
     var sshlinkstr;
     sshlinkstr = thisPageProtocol+"//"+thisPageUrl+"/?hostname="+hostnamestr+"&port="+portstr+"&username="+usrnamestr+"&password="+passwdstrAfterBase64;
-    document.getElementById("sshlink").textContent = sshlinkstr; // 使用 textContent 代替 innerHTML 以提高安全性
+    document.getElementById("sshlink").textContent = sshlinkstr;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var sshlinkBtn = document.getElementById('sshlinkBtn');
+  if (sshlinkBtn) {
+    sshlinkBtn.addEventListener("click", updateSSHlink);
+  }
+
+  var sshlinkdiv = document.getElementById("sshlink");
+  if (sshlinkdiv) {
+    sshlinkdiv.style.cursor = "pointer";
+    sshlinkdiv.title = "Click to copy";
+    sshlinkdiv.addEventListener("click", function() {
+      var text = this.textContent;
+      if (text) {
+        copyToClipboard(text);
+      }
+    });
+  }
+});
 
 jQuery(function($){
   var status = $('#status'),

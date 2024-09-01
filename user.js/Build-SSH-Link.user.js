@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Build SSH Link (Optimized)
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Build SSH link for huashengdun-webssh with copy feature (optimized version)
 // @author       ǝɔ∀ǝdʎz∀ɹɔ 👽
 // @author       GoldWillShine ⚜️
@@ -15,33 +15,15 @@
 
 (function() {
     'use strict';
-    // Your code here...
-    // 获取 form 元素
-    var form = document.getElementById("connect");
-    /////////////////////
-    // 创建 `<button>` 元素
-    var buildLinkBtn = document.createElement("button");
-    // 设置 `<button>` 的属性
-    buildLinkBtn.type="button";
-    buildLinkBtn.className="btn btn-info";
-    buildLinkBtn.innerHTML="buildSSHLink";
-    buildLinkBtn.id="sshlinkBtnA";
-    // 将 `<button>` 添加到 `<form>` 元素范围内部的尾部
-    form.appendChild(buildLinkBtn);
-    ////////////////////
-    // 创建 `<div>` 元素
-    var sshlinkdiv = document.createElement("div");
-    // 设置 `<div>` 的属性
-    sshlinkdiv.id = "sshlinkA";
-    // 将 `<div>` 添加到 `<form>` 元素范围内部的尾部
-    form.appendChild(sshlinkdiv);
-    ////////////////////
-    // 让按钮的click事件 调用 updateSSHlinkA 函数
-    document.querySelector('#sshlinkBtnA').addEventListener("click", updateSSHlinkA);
+
+    // 获取已存在的 SSH Link 按钮和 sshlink div
+    var buildLinkBtn = document.getElementById("sshlinkBtn");
+    var sshlinkdiv = document.getElementById("sshlink");
+
+    // 让按钮的click事件调用 updateSSHlink 函数
+    buildLinkBtn.addEventListener("click", updateSSHlink);
 
     // 添加点击复制功能
-    sshlinkdiv.style.cursor = "pointer";
-    sshlinkdiv.title = "Click to copy";
     sshlinkdiv.addEventListener("click", function() {
         var text = this.textContent;
         if (text) {
@@ -54,7 +36,7 @@
     });
 })();
 
-function updateSSHlinkA() {
+function updateSSHlink() {
     var thisPageProtocol = window.location.protocol;
     var thisPageUrl = window.location.host;
     var hostnamestr = document.getElementById("hostname").value;
@@ -64,11 +46,11 @@ function updateSSHlinkA() {
     }
     var usrnamestr = document.getElementById("username").value;
     if (usrnamestr == "") {
-        usrnamestr = "root" // 修正：将 portstr 改为 usrnamestr
+        usrnamestr = "root"
     }
     var passwdstr = document.getElementById("password").value;
     var passwdstrAfterBase64 = window.btoa(passwdstr);
     var sshlinkstr;
     sshlinkstr = thisPageProtocol+"//"+thisPageUrl+"/?hostname="+hostnamestr+"&port="+portstr+"&username="+usrnamestr+"&password="+passwdstrAfterBase64;
-    document.getElementById("sshlinkA").textContent = sshlinkstr; // 使用 textContent 代替 innerHTML 以提高安全性
+    document.getElementById("sshlink").textContent = sshlinkstr;
 }

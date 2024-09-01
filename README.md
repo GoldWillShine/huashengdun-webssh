@@ -1,10 +1,11 @@
-【NodeLoc 系列群组频道社区】
+【NodeLoc.com 系列群组频道社区】
 * NodeLoc 官方群组：https://t.me/nodeloc_com
 * VPS主机交流：https://t.me/nodeloc_server
 * 快讯频道交流：https://t.me/nodeloc_ec
 * NodeLoc 官方QQ群：369655515
 * QQ快讯频道：https://pd.qq.com/s/9xtdpzqfl
 * Discord NL官方社区：https://discord.gg/58FsrMnAuW
+* NodeLoc 官方外宣X号：https://x.com/node_loc
 
 ## 我的修改
 增加生成SSH Link功能，方便收藏，下次使用不需要输入密码。

@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Build SSH Link (Optimized)
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.2
 // @description  Build SSH link for huashengdun-webssh with copy feature (optimized version)
 // @author       ǝɔ∀ǝdʎz∀ɹɔ 👽
 // @author       GoldWillShine ⚜️
 // @match        https://ssh.vps.vc/*
 // @match        https://ssh.hax.co.id/*
-// @match        https://ssh-crazypeace.koyeb.app/
+// @match        https://ssh-crazypeace.koyeb.app/*
 // @match        https://nodeloc.koyeb.app/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=koyeb.app
 // @grant        none

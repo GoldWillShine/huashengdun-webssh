@@ -932,22 +932,18 @@ document.addEventListener('DOMContentLoaded', function() {
             var baseUrl = 'https://ssh-crazypeace.koyeb.app/';
             var fullLink = `${baseUrl}?hostname=${hostname}&port=${port}&username=${username}&password=${password}`;
             
-            sshlink.value = fullLink;
-            copyStatus.style.display = 'none'; // 重置复制状态显示
+            sshlink.value = fullLink;  // 设置输入框的值为生成的链接
+            sshlink.style.display = 'block';  // 确保输入框可见
+            copyButton.style.display = 'block';  // 显示复制按钮
+            copyStatus.style.display = 'none';  // 重置复制状态显示
         });
     }
 
     function copyToClipboard() {
-        sshlink.select();
-        sshlink.setSelectionRange(0, 99999); // For mobile devices
+        if (sshlink.value) {  // 检查是否有链接可以复制
+            sshlink.select();
+            sshlink.setSelectionRange(0, 99999); // For mobile devices
 
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(sshlink.value).then(() => {
-                showCopyStatus('链接已复制到剪贴板！', 'green');
-            }).catch(err => {
-                showCopyStatus('复制失败: ' + err.message, 'red');
-            });
-        } else {
             try {
                 var successful = document.execCommand('copy');
                 var msg = successful ? '链接已复制到剪贴板！' : '复制失败';
@@ -955,6 +951,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (err) {
                 showCopyStatus('复制失败: ' + err.message, 'red');
             }
+        } else {
+            showCopyStatus('没有链接可复制', 'red');
         }
     }
 
@@ -975,3 +973,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 });
+

@@ -917,67 +917,64 @@ jQuery(function($){
 
 // 新添加的代码
 document.addEventListener('DOMContentLoaded', function() {
-    // 获取SSH链接按钮
-    var generateLinkBtn = document.getElementById('generateLinkBtn');
-    if (generateLinkBtn) {
-        generateLinkBtn.addEventListener("click", updateSSHlink);
-    }
+  var sshlinkBtn = document.getElementById('sshlinkBtn');
+  var sshlink = document.getElementById('sshlink');
+  var copyStatus = document.getElementById('copyStatus');
 
-    // 获取生成的链接div
-    var generatedLinkDiv = document.getElementById("generatedLink");
-    if (generatedLinkDiv) {
-        generatedLinkDiv.style.cursor = "pointer";
-        generatedLinkDiv.title = "Click to copy";
-        generatedLinkDiv.addEventListener("click", function() {
-            var text = this.textContent;
-            if (text) {
-                copyToClipboard(text);
-            }
+  if (sshlinkBtn) {
+    sshlinkBtn.addEventListener('click', function() {
+      var hostname = encodeURIComponent(document.getElementById('hostname').value);
+      var port = encodeURIComponent(document.getElementById('port').value || '22');
+      var username = encodeURIComponent(document.getElementById('username').value);
+      var password = encodeURIComponent(document.getElementById('password').value);
+
+      var baseUrl = 'https://ssh-crazypeace.koyeb.app/';
+      var fullLink = `${baseUrl}?hostname=${hostname}&port=${port}&username=${username}&password=${password}`;
+      
+      sshlink.textContent = fullLink;
+      sshlink.href = fullLink;
+      copyStatus.style.display = 'none'; // 重置复制状态显示
+    });
+  }
+
+  if (sshlink) {
+    sshlink.addEventListener('click', function(event) {
+      event.preventDefault();
+      var text = this.textContent;
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopyStatus('链接已复制到剪贴板！', 'green');
+        }).catch(err => {
+          showCopyStatus('复制失败: ' + err.message, 'red');
         });
+      } else {
+        copyToClipboard(text);
+      }
+    });
+  }
+
+  function showCopyStatus(message, color) {
+    copyStatus.textContent = message;
+    copyStatus.style.color = color;
+    copyStatus.style.display = 'inline';
+    setTimeout(() => {
+      copyStatus.style.display = 'none';
+    }, 3000);
+  }
+
+  function copyToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? '链接已复制到剪贴板！' : '复制失败';
+      showCopyStatus(msg, successful ? 'green' : 'red');
+    } catch (err) {
+      showCopyStatus('复制失败: ' + err.message, 'red');
     }
-
-    // 获取复制状态显示元素（如果存在）
-    var copyStatus = document.getElementById("copyStatus");
-
-    // 更新SSH链接的函数
-    function updateSSHlink() {
-        var username = document.getElementById("username").value;
-        var hostname = document.getElementById("hostname").value;
-        var port = document.getElementById("port").value;
-
-        if (username && hostname) {
-            var sshlink = "ssh://" + username + "@" + hostname;
-            if (port) {
-                sshlink += ":" + port;
-            }
-            if (generatedLinkDiv) {
-                generatedLinkDiv.textContent = sshlink;
-                generatedLinkDiv.style.display = "block";
-            }
-        } else {
-            alert("Please enter both username and hostname.");
-        }
-    }
-
-    // 复制到剪贴板的函数
-    function copyToClipboard(text) {
-        var textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            var successful = document.execCommand('copy');
-            var msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Copying text command was ' + msg);
-            if (copyStatus) {
-                copyStatus.textContent = "Copied!";
-                setTimeout(function() {
-                    copyStatus.textContent = "";
-                }, 2000);
-            }
-        } catch (err) {
-            console.log('Oops, unable to copy');
-        }
-        document.body.removeChild(textArea);
-    }
+    document.body.removeChild(textArea);
+  }
 });

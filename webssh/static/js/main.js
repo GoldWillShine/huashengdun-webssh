@@ -919,6 +919,7 @@ jQuery(function($){
 document.addEventListener('DOMContentLoaded', function() {
   var generateLinkBtn = document.getElementById('generateLinkBtn');
   var generatedLink = document.getElementById('generatedLink');
+  var copyStatus = document.getElementById('copyStatus');
 
   if (generateLinkBtn) {
     generateLinkBtn.addEventListener('click', function() {
@@ -932,26 +933,33 @@ document.addEventListener('DOMContentLoaded', function() {
       
       generatedLink.textContent = fullLink;
       generatedLink.href = fullLink;
+      copyStatus.style.display = 'none'; // 重置复制状态显示
     });
   }
 
   if (generatedLink) {
-  generatedLink.addEventListener('click', function(event) {
-    event.preventDefault();
-    console.log('Link clicked'); // 调试用
-    var text = this.href;
-    console.log('Copying text:', text); // 调试用
+    generatedLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      var text = this.textContent;
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopyStatus('链接已复制到剪贴板！', 'green');
+        }).catch(err => {
+          showCopyStatus('复制失败: ' + err.message, 'red');
+        });
+      } else {
+        // 现有的后备方法...
+      }
+    });
+  }
 
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(() => {
-        console.log('Text copied successfully');
-        alert('链接已复制到剪贴板！');
-      }).catch(err => {
-        console.error('无法复制文本: ', err);
-        alert('复制失败: ' + err.message);
-      });
-    } else {
-      // 现有的后备方法...
-    }
-  });
-}
+  function showCopyStatus(message, color) {
+    copyStatus.textContent = message;
+    copyStatus.style.color = color;
+    copyStatus.style.display = 'inline';
+    setTimeout(() => {
+      copyStatus.style.display = 'none';
+    }, 3000);
+  }
+});

@@ -937,18 +937,30 @@ document.addEventListener('DOMContentLoaded', function() {
             var hostname = encodeURIComponent(document.getElementById('hostname').value);
             var port = encodeURIComponent(document.getElementById('port').value || '22');
             var username = encodeURIComponent(document.getElementById('username').value);
-            var password = encodeURIComponent(document.getElementById('password').value);
+            var password = encodeURIComponent(btoa(document.getElementById('password').value));
 
-            var baseUrl = 'https://ssh-crazypeace.koyeb.app/';
+            var baseUrl = window.location.origin + window.location.pathname;
             var fullLink = `${baseUrl}?hostname=${hostname}&port=${port}&username=${username}&password=${password}`;
             
-            sshlink.value = fullLink;  // 设置输入框的值为生成的链接
-            sshlink.style.display = 'block';  // 确保输入框可见
-            copyButton.style.display = 'block';  // 显示复制按钮
-            copyStatus.style.display = 'none';  // 重置复制状态显示
+            sshlink.value = fullLink;
+            sshlink.style.display = 'block';
+            copyButton.style.display = 'block';
+            copyStatus.style.display = 'none';
         });
     }
 
+    if (sshlink) {
+        sshlink.addEventListener('click', function() {
+            copyToClipboard(sshlink.value);
+        });
+    }
+
+    if (copyButton) {
+        copyButton.addEventListener('click', function() {
+            copyToClipboard(sshlink.value);
+        });
+    }
+});
     function copyToClipboard() {
         if (sshlink.value) {  // 检查是否有链接可以复制
             sshlink.select();

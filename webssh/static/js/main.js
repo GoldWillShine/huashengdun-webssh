@@ -3,38 +3,26 @@
 var jQuery;
 var wssh = {};
 
-(function() {
-  // For FormData without getter and setter
-  var proto = FormData.prototype,
-      data = {};
-
-  if (!proto.get) {
-    proto.get = function (name) {
-      if (data[name] === undefined) {
-        var input = document.querySelector('input[name="' + name + '"]'),
-            value;
-        if (input) {
-          if (input.type === 'file') {
-            value = input.files[0];
-          } else {
-            value = input.value;
-          }
-          data[name] = value;
-        }
-      }
-      return data[name];
-    };
+function showCopyStatus(message, color) {
+  var copyStatus = document.getElementById('copyStatus');
+  if (copyStatus) {
+    copyStatus.textContent = message;
+    copyStatus.style.color = color;
+    copyStatus.style.display = 'inline';
+    setTimeout(() => {
+      copyStatus.style.display = 'none';
+    }, 3000);
+  } else {
+    console.error('copyStatus element not found');
   }
-
-  if (!proto.set) {
-    proto.set = function (name, value) {
-      data[name] = value;
-    };
-  }
-}());
-
+}
 
 function copyToClipboard(text) {
+  if (!text) {
+    showCopyStatus('No text to copy', 'red');
+    return;
+  }
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
       showCopyStatus('SSH link copied to clipboard!', 'green');
@@ -59,35 +47,39 @@ function copyToClipboard(text) {
   }
 }
 
-function showCopyStatus(message, color) {
-  var copyStatus = document.getElementById('copyStatus');
-  copyStatus.textContent = message;
-  copyStatus.style.color = color;
-  copyStatus.style.display = 'inline';
-  setTimeout(() => {
-    copyStatus.style.display = 'none';
-  }, 3000);
-}
-
 function updateSSHlink() {
-  var thisPageProtocol = window.location.protocol;
-  var thisPageUrl = window.location.host;
-  var hostnamestr = encodeURIComponent(document.getElementById("hostname").value);
-  var portstr = encodeURIComponent(document.getElementById("port").value || "22");
-  var usrnamestr = encodeURIComponent(document.getElementById("username").value || "root");
-  var passwdstr = encodeURIComponent(window.btoa(document.getElementById("password").value));
-  var sshlinkstr = `${thisPageProtocol}//${thisPageUrl}/?hostname=${hostnamestr}&port=${portstr}&username=${usrnamestr}&password=${passwdstr}`;
+  var hostname = encodeURIComponent(document.getElementById("hostname").value);
+  var port = encodeURIComponent(document.getElementById("port").value || "22");
+  var username = encodeURIComponent(document.getElementById("username").value || "root");
+  var password = encodeURIComponent(btoa(document.getElementById("password").value));
+
+  var baseUrl = window.location.origin + window.location.pathname;
+  var sshlinkstr = `${baseUrl}?hostname=${hostname}&port=${port}&username=${username}&password=${password}`;
   
   var sshlinkInput = document.getElementById("sshlink");
-  sshlinkInput.value = sshlinkstr;
-  sshlinkInput.style.display = 'block';
-  document.getElementById("copy-button").style.display = 'block';
+  if (sshlinkInput) {
+    sshlinkInput.value = sshlinkstr;
+    sshlinkInput.style.display = 'block';
+  } else {
+    console.error('sshlink input not found');
+  }
+
+  var copyButton = document.getElementById("copy-button");
+  if (copyButton) {
+    copyButton.style.display = 'block';
+  } else {
+    console.error('copy-button not found');
+  }
+
+  console.log('SSH Link updated:', sshlinkstr); // 调试输出
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   var sshlinkBtn = document.getElementById('sshlinkBtn');
   if (sshlinkBtn) {
     sshlinkBtn.addEventListener("click", updateSSHlink);
+  } else {
+    console.error('sshlinkBtn not found');
   }
 
   var sshlinkInput = document.getElementById("sshlink");
@@ -97,13 +89,18 @@ document.addEventListener('DOMContentLoaded', function() {
     sshlinkInput.addEventListener("click", function() {
       copyToClipboard(this.value);
     });
+  } else {
+    console.error('sshlink input not found');
   }
 
   var copyButton = document.getElementById("copy-button");
   if (copyButton) {
     copyButton.addEventListener("click", function() {
-      copyToClipboard(document.getElementById("sshlink").value);
+      var sshlinkValue = document.getElementById("sshlink").value;
+      copyToClipboard(sshlinkValue);
     });
+  } else {
+    console.error('copy-button not found');
   }
 });
 

@@ -47,6 +47,25 @@
         text-decoration: none;
         border-radius: 5px;
       }
+
+      #sshlink-container {
+        margin-top: 10px;
+      }
+      
+      #sshlink {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      
+      #copy-button {
+        display: block;
+        margin-top: 5px;
+      }
+      
+      #copyStatus {
+        margin-left: 10px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -97,20 +116,19 @@
         <button type="submit" class="btn btn-primary">Connect</button>
         <button type="reset" class="btn btn-danger">Reset</button>
         <button type="button" class="btn btn-info" id="sshlinkBtn">SSH Link</button>
-        <div id="sshlink-container" style="margin-top: 10px;">
-        <input type="text" id="sshlink" readonly style="width: 100%; cursor: pointer;" title="Click to copy">
-        <button id="copy-button" style="margin-top: 5px;">Copy Link</button>
+        <div id="sshlink-container" style="margin-top: 10px; display: none;">
+          <input type="text" id="sshlink" readonly style="width: 100%; cursor: pointer;" title="Click to copy">
+          <button id="copy-button" style="margin-top: 5px;">Copy Link</button>
         </div>
-        <span id="copyStatus" style="display: none; margin-left: 10px;"></span>
-
+        <div id="copyStatus" style="display: none;"></div>
         
         <!-- 新增广告位按钮 -->
         <div class="ad-buttons">
-        <a href="https://github.com/GoldWillShine/huashengdun-webssh" class="ad-button" style="background-color: #4CAF50;" target="_blank">Github</a>
-        <a href="https://www.nodeloc.com/d/5494" class="ad-button" style="background-color: #008CBA;" target="_blank">NL聚合主机测评脚本</a>
-        <a href="https://www.nodeloc.com/vps" class="ad-button" style="background-color: #f44336;" target="_blank">VPS/Server在线选购</a>
-        <a href="https://free.nodeloc.com/" class="ad-button" style="background-color: #f44336;" target="_blank">免费公益VPS</a>
-        <a href="https://free.nodeloc.com/" class="ad-button" style="background-color: #f44336;" target="_blank">NL免费CDN</a>
+          <a href="https://github.com/GoldWillShine/huashengdun-webssh" class="ad-button" style="background-color: #4CAF50;" target="_blank">Github</a>
+          <a href="https://www.nodeloc.com/d/5494" class="ad-button" style="background-color: #008CBA;" target="_blank">NL聚合主机测评脚本</a>
+          <a href="https://www.nodeloc.com/vps" class="ad-button" style="background-color: #f44336;" target="_blank">VPS/Server在线选购</a>
+          <a href="https://free.nodeloc.com/" class="ad-button" style="background-color: #f44336;" target="_blank">免费公益VPS</a>
+          <a href="https://free.nodeloc.com/" class="ad-button" style="background-color: #f44336;" target="_blank">NL免费CDN</a>
         </div>
       </form>
     </div>

@@ -37,9 +37,10 @@ var wssh = {};
 function copyToClipboard(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
-      alert('SSH link copied to clipboard!');
+      showCopyStatus('SSH link copied to clipboard!', 'green');
     }).catch(function(err) {
       console.error('Could not copy text: ', err);
+      showCopyStatus('Failed to copy: ' + err.message, 'red');
     });
   } else {
     var textArea = document.createElement("textarea");
@@ -47,32 +48,40 @@ function copyToClipboard(text) {
     document.body.appendChild(textArea);
     textArea.select();
     try {
-      document.execCommand('copy');
-      alert('SSH link copied to clipboard!');
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'SSH link copied to clipboard!' : 'Copy failed';
+      showCopyStatus(msg, successful ? 'green' : 'red');
     } catch (err) {
       console.error('Could not copy text: ', err);
+      showCopyStatus('Failed to copy: ' + err.message, 'red');
     }
     document.body.removeChild(textArea);
   }
 }
 
+function showCopyStatus(message, color) {
+  var copyStatus = document.getElementById('copyStatus');
+  copyStatus.textContent = message;
+  copyStatus.style.color = color;
+  copyStatus.style.display = 'inline';
+  setTimeout(() => {
+    copyStatus.style.display = 'none';
+  }, 3000);
+}
+
 function updateSSHlink() {
-    var thisPageProtocol = window.location.protocol;
-    var thisPageUrl = window.location.host;
-    var hostnamestr = document.getElementById("hostname").value;
-    var portstr = document.getElementById("port").value;
-    if (portstr == "") {
-        portstr = "22"
-    }
-    var usrnamestr = document.getElementById("username").value;
-    if (usrnamestr == "") {
-      usrnamestr = "root"
-    }
-    var passwdstr = document.getElementById("password").value;
-    var passwdstrAfterBase64 = window.btoa(passwdstr);
-    var sshlinkstr;
-    sshlinkstr = thisPageProtocol+"//"+thisPageUrl+"/?hostname="+hostnamestr+"&port="+portstr+"&username="+usrnamestr+"&password="+passwdstrAfterBase64;
-    document.getElementById("sshlink").textContent = sshlinkstr;
+  var thisPageProtocol = window.location.protocol;
+  var thisPageUrl = window.location.host;
+  var hostnamestr = encodeURIComponent(document.getElementById("hostname").value);
+  var portstr = encodeURIComponent(document.getElementById("port").value || "22");
+  var usrnamestr = encodeURIComponent(document.getElementById("username").value || "root");
+  var passwdstr = encodeURIComponent(window.btoa(document.getElementById("password").value));
+  var sshlinkstr = `${thisPageProtocol}//${thisPageUrl}/?hostname=${hostnamestr}&port=${portstr}&username=${usrnamestr}&password=${passwdstr}`;
+  
+  var sshlinkInput = document.getElementById("sshlink");
+  sshlinkInput.value = sshlinkstr;
+  sshlinkInput.style.display = 'block';
+  document.getElementById("copy-button").style.display = 'block';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -81,15 +90,19 @@ document.addEventListener('DOMContentLoaded', function() {
     sshlinkBtn.addEventListener("click", updateSSHlink);
   }
 
-  var sshlinkdiv = document.getElementById("sshlink");
-  if (sshlinkdiv) {
-    sshlinkdiv.style.cursor = "pointer";
-    sshlinkdiv.title = "Click to copy";
-    sshlinkdiv.addEventListener("click", function() {
-      var text = this.textContent;
-      if (text) {
-        copyToClipboard(text);
-      }
+  var sshlinkInput = document.getElementById("sshlink");
+  if (sshlinkInput) {
+    sshlinkInput.style.cursor = "pointer";
+    sshlinkInput.title = "Click to copy";
+    sshlinkInput.addEventListener("click", function() {
+      copyToClipboard(this.value);
+    });
+  }
+
+  var copyButton = document.getElementById("copy-button");
+  if (copyButton) {
+    copyButton.addEventListener("click", function() {
+      copyToClipboard(document.getElementById("sshlink").value);
     });
   }
 });

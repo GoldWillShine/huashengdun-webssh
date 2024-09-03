@@ -936,30 +936,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   if (generatedLink) {
-    generatedLink.addEventListener('click', function(event) {
-      event.preventDefault(); // 防止链接被立即打开
-      var text = this.href;
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => {
-          alert('链接已复制到剪贴板！');
-        }).catch(err => {
-          console.error('无法复制文本: ', err);
-        });
-      } else {
-        var textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          var successful = document.execCommand('copy');
-          var msg = successful ? '链接已复制到剪贴板！' : '复制失败';
-          alert(msg);
-        } catch (err) {
-          console.error('无法复制文本: ', err);
-        }
-        document.body.removeChild(textArea);
-      }
-    });
-  }
-});
+  generatedLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    console.log('Link clicked'); // 调试用
+    var text = this.href;
+    console.log('Copying text:', text); // 调试用
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => {
+        console.log('Text copied successfully');
+        alert('链接已复制到剪贴板！');
+      }).catch(err => {
+        console.error('无法复制文本: ', err);
+        alert('复制失败: ' + err.message);
+      });
+    } else {
+      // 现有的后备方法...
+    }
+  });
+}

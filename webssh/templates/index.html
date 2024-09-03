@@ -47,25 +47,6 @@
         text-decoration: none;
         border-radius: 5px;
       }
-
-      #sshlink-container {
-        margin-top: 10px;
-      }
-      
-      #sshlink {
-        width: 100%;
-        margin-bottom: 5px;
-      }
-      
-      #copy-button {
-        display: block;
-        margin-top: 5px;
-      }
-      
-      #copyStatus {
-        margin-left: 10px;
-        font-weight: bold;
-      }
     </style>
   </head>
   <body>
@@ -116,11 +97,7 @@
         <button type="submit" class="btn btn-primary">Connect</button>
         <button type="reset" class="btn btn-danger">Reset</button>
         <button type="button" class="btn btn-info" id="sshlinkBtn">SSH Link</button>
-        <div id="sshlink-container" style="margin-top: 10px; display: none;">
-          <input type="text" id="sshlink" readonly style="width: 100%; cursor: pointer;" title="Click to copy">
-          <button id="copy-button" style="margin-top: 5px;">Copy Link</button>
-        </div>
-        <div id="copyStatus" style="display: none;"></div>
+        <div id="sshlink" style="cursor: pointer; margin-top: 10px;" title="Click to copy"></div>
         
         <!-- 新增广告位按钮 -->
         <div class="ad-buttons">

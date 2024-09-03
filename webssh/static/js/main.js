@@ -917,64 +917,61 @@ jQuery(function($){
 
 // 新添加的代码
 document.addEventListener('DOMContentLoaded', function() {
-  var sshlinkBtn = document.getElementById('sshlinkBtn');
-  var sshlink = document.getElementById('sshlink');
-  var copyStatus = document.getElementById('copyStatus');
+    var sshlinkBtn = document.getElementById('sshlinkBtn');
+    var sshlink = document.getElementById('sshlink');
+    var copyButton = document.getElementById('copy-button');
+    var copyStatus = document.getElementById('copyStatus');
 
-  if (sshlinkBtn) {
-    sshlinkBtn.addEventListener('click', function() {
-      var hostname = encodeURIComponent(document.getElementById('hostname').value);
-      var port = encodeURIComponent(document.getElementById('port').value || '22');
-      var username = encodeURIComponent(document.getElementById('username').value);
-      var password = encodeURIComponent(document.getElementById('password').value);
+    if (sshlinkBtn) {
+        sshlinkBtn.addEventListener('click', function() {
+            var hostname = encodeURIComponent(document.getElementById('hostname').value);
+            var port = encodeURIComponent(document.getElementById('port').value || '22');
+            var username = encodeURIComponent(document.getElementById('username').value);
+            var password = encodeURIComponent(document.getElementById('password').value);
 
-      var baseUrl = 'https://ssh-crazypeace.koyeb.app/';
-      var fullLink = `${baseUrl}?hostname=${hostname}&port=${port}&username=${username}&password=${password}`;
-      
-      sshlink.textContent = fullLink;
-      sshlink.href = fullLink;
-      copyStatus.style.display = 'none'; // 重置复制状态显示
-    });
-  }
-
-  if (sshlink) {
-    sshlink.addEventListener('click', function(event) {
-      event.preventDefault();
-      var text = this.textContent;
-      
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => {
-          showCopyStatus('链接已复制到剪贴板！', 'green');
-        }).catch(err => {
-          showCopyStatus('复制失败: ' + err.message, 'red');
+            var baseUrl = 'https://ssh-crazypeace.koyeb.app/';
+            var fullLink = `${baseUrl}?hostname=${hostname}&port=${port}&username=${username}&password=${password}`;
+            
+            sshlink.value = fullLink;
+            copyStatus.style.display = 'none'; // 重置复制状态显示
         });
-      } else {
-        copyToClipboard(text);
-      }
-    });
-  }
-
-  function showCopyStatus(message, color) {
-    copyStatus.textContent = message;
-    copyStatus.style.color = color;
-    copyStatus.style.display = 'inline';
-    setTimeout(() => {
-      copyStatus.style.display = 'none';
-    }, 3000);
-  }
-
-  function copyToClipboard(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? '链接已复制到剪贴板！' : '复制失败';
-      showCopyStatus(msg, successful ? 'green' : 'red');
-    } catch (err) {
-      showCopyStatus('复制失败: ' + err.message, 'red');
     }
-    document.body.removeChild(textArea);
-  }
+
+    function copyToClipboard() {
+        sshlink.select();
+        sshlink.setSelectionRange(0, 99999); // For mobile devices
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(sshlink.value).then(() => {
+                showCopyStatus('链接已复制到剪贴板！', 'green');
+            }).catch(err => {
+                showCopyStatus('复制失败: ' + err.message, 'red');
+            });
+        } else {
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? '链接已复制到剪贴板！' : '复制失败';
+                showCopyStatus(msg, successful ? 'green' : 'red');
+            } catch (err) {
+                showCopyStatus('复制失败: ' + err.message, 'red');
+            }
+        }
+    }
+
+    if (sshlink) {
+        sshlink.addEventListener('click', copyToClipboard);
+    }
+
+    if (copyButton) {
+        copyButton.addEventListener('click', copyToClipboard);
+    }
+
+    function showCopyStatus(message, color) {
+        copyStatus.textContent = message;
+        copyStatus.style.color = color;
+        copyStatus.style.display = 'inline';
+        setTimeout(() => {
+            copyStatus.style.display = 'none';
+        }, 3000);
+    }
 });

@@ -97,7 +97,10 @@
         <button type="submit" class="btn btn-primary">Connect</button>
         <button type="reset" class="btn btn-danger">Reset</button>
         <button type="button" class="btn btn-info" id="sshlinkBtn">SSH Link</button>
-        <div id="sshlink" style="cursor: pointer; margin-top: 10px;" title="Click to copy"></div>
+        <div id="sshlink-container" style="margin-top: 10px;">
+        <input type="text" id="sshlink" readonly style="width: 100%; cursor: pointer;" title="Click to copy">
+        <button id="copy-button" style="margin-top: 5px;">Copy Link</button>
+        </div>
         <span id="copyStatus" style="display: none; margin-left: 10px;"></span>
         
         <!-- 新增广告位按钮 -->

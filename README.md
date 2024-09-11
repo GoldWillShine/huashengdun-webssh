@@ -8,6 +8,12 @@
 * NodeLoc 官方外宣X号：https://x.com/node_loc
 
 ## 我的修改
+![点击复制](https://s.rmimg.com/2024/09/11/3e922c9fcf9675d569e1b33fd36ac352.gif)
+
+<details>
+<summary>crazypeace readme (点击展开)</summary>
+ 
+## 我的修改
 增加生成SSH Link功能，方便收藏，下次使用不需要输入密码。
 ![image](https://github.com/crazypeace/huashengdun-webssh/assets/665889/123a33bd-9514-46a5-8e64-d7a82b7f6f19)
 

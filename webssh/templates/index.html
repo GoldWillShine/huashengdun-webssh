@@ -12,24 +12,30 @@
         margin-top: 15px;
         margin-bottom: 10px;
       }
+
       .container {
         margin-top: 20px;
       }
+
       .btn {
         margin-top: 15px;
-        margin-right: 5px;
+      }
+
+      .btn-danger {
+        margin-left: 5px;
       }
       {% if font.family %}
       @font-face {
         font-family: '{{ font.family }}';
         src: url('{{ font.url }}');
       }
+
       body {
         font-family: '{{ font.family }}';
       }
       {% end %}
       
-      /* Updated ad-buttons styles */
+      /* 更新后的广告按钮样式 */
       .ad-buttons {
         margin-top: 15px;
         display: flex;
@@ -52,6 +58,7 @@
   </head>
   <body>
     <div id="waiter" style="display: none"> Connecting ... </div>
+
     <div class="container form-container" style="display: none">
       <form id="connect" action="" method="post" enctype="multipart/form-data"{% if debug %} novalidate{% end %}>
         <div class="row">
@@ -94,14 +101,12 @@
         </div>
         <input type="hidden" id="term" name="term" value="xterm-256color">
         {% module xsrf_form_html() %}
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary">Connect</button>
-          <button type="reset" class="btn btn-danger">Reset</button>
-          <button type="button" class="btn btn-info" id="sshlinkBtn">SSH Link</button>
-        </div>
+        <button type="submit" class="btn btn-primary">Connect</button>
+        <button type="reset" class="btn btn-danger">Reset</button>
+        <button type="button" class="btn btn-info" id="sshlinkBtn">SSH Link</button>
         <div id="sshlink" style="cursor: pointer; margin-top: 10px;" title="Click to copy"></div>
         
-        <!-- Updated ad-buttons section -->
+        <!-- 更新后的广告按钮部分 -->
         <div class="ad-buttons">
           <a href="https://github.com/GoldWillShine/huashengdun-webssh" class="btn btn-success ad-button" target="_blank">Github</a>
           <a href="https://www.nodeloc.com/d/5494" class="btn btn-primary ad-button" target="_blank">NL聚合主机测评脚本</a>
@@ -113,10 +118,12 @@
         </div>
       </form>
     </div>
+
     <div class="container">
       <div id="status" style="color: red;"></div>
       <div id="terminal"></div>
     </div>
+
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/popper.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
